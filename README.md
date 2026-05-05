@@ -1,61 +1,42 @@
-# Proof-of-Concepts
-*A repository of small, security‑focused proof‑of‑concepts created for learning, research, and educational exploration.*
+## EdgeSavedPasswordsDumper
+*A small educational tool demonstrating that Edge stores credentials in cleartext in process memory.*
 
 ---
 
 ## Overview
-This repository contains various proof‑of‑concept (PoC) tools and experiments related to software behavior, security research, and system internals.  
-All PoCs are intentionally minimal, transparent, and designed to help others understand how certain mechanisms work under the hood.
+This project is a simple C#/.NET 3.5 tool created to demonstrate that Edge stores credentials in cleartext in memory. It is intended for **educational and research purposes only**, especially for understanding memory inspection, credential handling, and security design differences across software.
 
-These projects are **not production‑ready**, **not optimized**, and often intentionally simplified to make the underlying concepts easier to study.
+I am **not an experienced C# developer**, so the code may contain rough edges, inefficiencies, or non‑idiomatic patterns. Contributions, improvements, and suggestions are welcome.
 
 ---
 
 ## Purpose
-The goal of this repository is to support:
-
-- learning and experimentation  
-- responsible security research  
-- transparency around software behavior  
-- discussion and knowledge‑sharing  
-
-None of the PoCs are intended for real‑world deployment, offensive use, or integration into production systems.
+This tool was created to show that whenever a user stores credentials in Edge (using the Microsoft Password Manager feature, e.g. Autofill), ALL credentials are stored in plaintext in the parent Edge process memory. This is obviously problematic in a shared environment (e.g. on a terminal servers) as an attacker can access **all** Edge processes for **all** logged on and disconnected users, and dump their saved credentials.
+Microsoft has said that this is "by design" and thus won't fix this.
+The tool is meant to support learning, responsible disclosure, and security awareness — not misuse.
 
 ---
 
-## Educational Use Only
-All code in this repository is provided **strictly for educational and research purposes**.  
-By using any part of this repository, you agree that:
+## Disclaimer
+This software is provided **strictly for educational use**.
 
-- You are solely responsible for how you use the code  
+By using this project, you agree that:
+- You are solely responsible for how you use this code  
 - You will not use it to violate privacy, security policies, or any applicable laws  
-- You understand that the PoCs may be incomplete, inaccurate, or unsafe for real‑world use  
-- You accept full responsibility for ensuring your actions comply with all legal and ethical requirements  
+- The author provides **no warranty** of any kind  
+- The author **cannot be held liable** for any misuse, damage, or consequences resulting from this software  
 
-The author does **not** endorse or condone misuse of any kind.
-
----
-
-## Disclaimer of Liability
-This software is provided **“as is”**, without warranty of any kind, express or implied.  
-The author shall **not be held liable** for any damages, losses, or consequences arising from the use, misuse, or inability to use this software.
-
-Use at your own risk.
+You accept full responsibility for ensuring your actions comply with all legal and ethical requirements.
 
 ---
 
-## Code Quality Notice
-Some PoCs may be written in languages or frameworks where the author has limited experience.  
-So expect spaghetti code, minimal error handling, simplified logic, and refusal to comment (pun intended).
-
---
-
-## License
-Unless otherwise stated, this repository is released under the **MIT License**, which permits reuse with attribution.  
-You may replace this with any license you prefer.
+## Features
+- Demonstrates that Edge stores save credentials in clear text in memory
+- .NET 3.5 code in order to avoid potential future AMSI related issues
 
 ---
 
-## Contributing
-Contributions, improvements, and discussions are welcome.  
-Please keep all submissions aligned with the educational and ethical intent of the project.
+## Requirements
+- Edge 147.0.3912.98 or older
+- .NET Framework **3.5**  
+- Administrator rights (to be able to read other users Edge processes memory)  
