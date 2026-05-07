@@ -4,7 +4,7 @@
 ---
 
 ## Overview
-This project is a simple C#/.NET 3.5 tool created to demonstrate that Edge stores credentials in cleartext in memory. It is intended for **educational and research purposes only**, especially for understanding memory inspection, credential handling, and security design differences across software.
+This project is a simple C# tool created to demonstrate that Edge stores credentials in cleartext in memory. It is intended for **educational and research purposes only**, especially for understanding memory inspection, credential handling, and security design differences across software.
 
 I am **not an experienced C# developer**, so the code may contain rough edges, inefficiencies, or non‑idiomatic patterns. Contributions, improvements, and suggestions are welcome.
 
@@ -32,11 +32,11 @@ You accept full responsibility for ensuring your actions comply with all legal a
 
 ## Features
 - Demonstrates that Edge stores save credentials in clear text in memory
-- .NET 3.5 code in order to avoid potential future AMSI related issues
 
 ---
 
 ## Requirements
 - Edge 147.0.3912.98 or older
-- .NET Framework **3.5**  
-- Administrator rights (to be able to read other users Edge processes memory)  
+- .NET Framework **4.8.1** (changed from 3.5 originally)
+- Can be run without Adminstrator rights, but will only be able to access Edge processes ran by the same user
+- If run with Administrator privileges, the program can access and read memory from other users’ Edge processes on the same machine 
